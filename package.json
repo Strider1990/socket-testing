@@ -2,6 +2,9 @@
   "name": "socket-chat",
   "version": "0.0.1",
   "description": "my first socket.io app",
+  "scripts": {
+    "start": "(cd client && npm run build) & (cd .. && node index.js)"
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
     "d3": "^5.12.0",
