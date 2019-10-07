@@ -71,16 +71,15 @@ var users = new Set();
 
 var router = express.Router();
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/client/build'));
 
 router.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/client/build/index.html');
 });
 
 router.post('/', (req, res) => {
   res.json(data);
 });
-
 
 /* Socket stuff
 */
