@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "my first socket.io app",
   "scripts": {
-    "start": "(cd client && npm run build) & (cd .. && node index.js)"
+    "start:unix": "(cd client && npm run build) && node index.js",
+    "start:windows": "(cd client && npm run build) & (cd .. && node index.js)"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
