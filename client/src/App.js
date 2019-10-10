@@ -2,8 +2,10 @@ import React from 'react';
 import logo from './logo.svg';
 import Socket from './components/Socket';
 import './App.css';
+import { connect } from 'react-redux';
+import { loginUser } from './actions/UserActions';
 
-const App = () => (
+const App = (props) => (
   <div className="App">
     <header className="App-header">
       <Socket />
@@ -19,8 +21,17 @@ const App = () => (
       >
         Learn React
       </a>
+      <button onClick={ props.onLoginClicked }>Login</button>
     </header>
   </div>
 )
 
-export default App;
+const mapDispatchToProps = dispatch => {
+  return {
+    onLoginClicked: () => {
+      dispatch(loginUser({ email: '', password: ''}))
+    }
+  }
+}
+
+export default connect(null, mapDispatchToProps)(App);

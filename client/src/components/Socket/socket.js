@@ -2,7 +2,7 @@ import React from 'react';
 import openSocket from 'socket.io-client';
 
 const Socket = (props) => {
-    const socket = openSocket('http://localhost:8080', {
+    const socket = openSocket('http://localhost:10718', {
         transports: ['websocket']
     });
 

@@ -1,9 +1,24 @@
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var APP_CONSTANTS = require('./constants/constants');
-var port = process.env.PORT || 8080;
+const loaded = require('dotenv').config()
+
+if (loaded.error) {
+  throw loaded.error;
+}
+
+const express = require('express');
+const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const APP_CONSTANTS = require('./constants/constants');
+const port = process.env.PORT || 8080;
+const jwt = require('jsonwebtoken');
+const helmet = require('helmet');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+
+const user = {
+  email: process.env.USER_EMAIL || 'test@email.com',
+  password: process.env.USER_PASS || 1234
+}
 
 var BELOW_THRESHOLD = APP_CONSTANTS.DEFAULT_BELOW_ALERT_THRESHOLD;
 var ABOVE_THRESHOLD = APP_CONSTANTS.DEFAULT_ABOVE_ALERT_THRESHOLD;
@@ -72,9 +87,27 @@ var users = new Set();
 var router = express.Router();
 
 app.use(express.static(__dirname + '/client/build'));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(helmet());
 
 router.get('/', (req, res) => {
   res.sendFile(__dirname + '/client/build/index.html');
+});
+
+router.post('/api/login', (req, res) => {
+  if (req && req.body && req.body.email && req.body.password) {
+    if (req.body.email === user.email && req.body.password === user.password) {
+      const payload = { email: req.body.email };
+      jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+      res.cookie('x-token', token, { httpOnly: true }).redirect('/');
+    } else {
+      res.status(403).send({ message: 'Invalid credentials'});
+    }
+  } else {
+    res.status(400).send({ message: 'Bad Request'});
+  }
 });
 
 router.post('/', (req, res) => {

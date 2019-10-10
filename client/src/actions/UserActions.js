@@ -1,6 +1,7 @@
 import { ajax } from 'rxjs/ajax';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, mapTo } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
+import { of } from 'rxjs';
 
 export const LOGIN_USER = 'LOGIN_USER';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
@@ -10,9 +11,7 @@ export const LOGOUT_FAILED = 'LOGOUT_FAILED';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
 export const INITIAL_USER = {
-    user: {
-        name: ''
-    }
+    user: {}
 }
 
 export const loginUser = (user) => {
@@ -58,14 +57,20 @@ export const loginUserEpic = action$ =>
     action$.pipe(
         ofType(LOGIN_USER),
         switchMap(action =>
-            ajax.postJSON('/api/login').pipe(
+            ajax('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(action.user)
+            }).pipe(
                 map(response => ({
                     type: LOGIN_SUCCESS,
                     response,
                     action
                 })),
                 catchError(error =>
-                    ({
+                    of({
                         type: LOGIN_FAILED,
                         error
                     })
