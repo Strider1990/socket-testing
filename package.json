@@ -3,13 +3,19 @@
   "version": "0.0.1",
   "description": "my first socket.io app",
   "scripts": {
-    "start": "(cd client && npm run build) & (cd .. && node index.js)"
+    "start:unix": "(cd client && npm run build) && node index.js",
+    "start:windows": "(cd client && npm run build) & (cd .. && node index.js)"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cookie": "^0.4.0",
+    "cookie-parser": "^1.4.4",
     "d3": "^5.12.0",
+    "dotenv": "^8.1.0",
     "express": "^4.17.1",
+    "helmet": "^3.21.1",
     "jquery": "^3.4.1",
+    "jsonwebtoken": "^8.5.1",
     "socket.io": "^2.3.0"
   }
 }
