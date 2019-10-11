@@ -1,35 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import Socket from './components/Socket';
-import './App.css';
+import React, { useState } from 'react';
+import './styles/main.css';
 import { connect } from 'react-redux';
 import { loginUser } from './actions/UserActions';
 
-const App = (props) => (
+const App = (props) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('')
+
+  return (
   <div className="App">
-    <header className="App-header">
-      <Socket />
-      <img src={logo} className="App-logo" alt="logo" />
-      <p>
-        Edit <code>src/App.js</code> and save to reload.
-      </p>
-      <a
-        className="App-link"
-        href="https://reactjs.org"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Learn React
-      </a>
-      <button onClick={ props.onLoginClicked }>Login</button>
-    </header>
+    <input 
+      className="border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-teal-300" 
+      placeholder="Email"
+      onChange={ (e) => setEmail(e.target.value) } />    
+    <input 
+      className="border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-teal-300" 
+      placeholder="Password"
+      type="password"
+      onChange={ (e) => setPassword(e.target.value) } />
+    <button
+      type="button" 
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex-1" 
+      onClick={ () => props.onLoginClicked(email, password) }>
+        Login
+    </button>
   </div>
-)
+)}
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLoginClicked: () => {
-      dispatch(loginUser({ email: '', password: ''}))
+    onLoginClicked: (email, password) => {
+      dispatch(loginUser({ email, password }))
     }
   }
 }

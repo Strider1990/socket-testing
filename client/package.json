@@ -10,11 +10,13 @@
     "redux": "^4.0.4",
     "redux-observable": "^1.2.0",
     "rxjs": "^6.5.3",
-    "socket.io-client": "^2.3.0"
+    "socket.io-client": "^2.3.0",
+    "tailwindcss": "^1.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run build:styles && react-scripts build",
+    "build:styles": "npx tailwind build src/styles/index.css -o src/styles/main.css",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

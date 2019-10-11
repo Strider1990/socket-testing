@@ -2,6 +2,7 @@ import { ajax } from 'rxjs/ajax';
 import { map, switchMap, catchError, mapTo } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import { of } from 'rxjs';
+import { connectSocket, CONNECTED_SOCKET, CONNECT_SOCKET } from './SocketActions';
 
 export const LOGIN_USER = 'LOGIN_USER';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
@@ -28,10 +29,10 @@ export const loginSuccess = (user) => {
     }
 }
 
-export const loginFailed = (user) => {
+export const loginFailed = (error) => {
     return {
         type: LOGIN_FAILED,
-        user
+        error
     }
 }
 
@@ -57,7 +58,8 @@ export const loginUserEpic = action$ =>
     action$.pipe(
         ofType(LOGIN_USER),
         switchMap(action =>
-            ajax('/api/login', {
+            ajax({
+                url: '/api/login', 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -66,8 +68,7 @@ export const loginUserEpic = action$ =>
             }).pipe(
                 map(response => ({
                     type: LOGIN_SUCCESS,
-                    response,
-                    action
+                    response
                 })),
                 catchError(error =>
                     of({
@@ -79,15 +80,20 @@ export const loginUserEpic = action$ =>
         )
     )
 
+export const loginSuccessEpic = action$ =>
+    action$.pipe(
+        ofType(LOGIN_SUCCESS),
+        mapTo(connectSocket())
+    )
+
 export const logoutUserEpic = action$ =>
     action$.pipe(
         ofType(LOGOUT_USER),
         switchMap(action =>
-            ajax.postJSON('/api/logout').pipe(
+            ajax('/api/logout').pipe(
                 map(response => ({
                     type: LOGOUT_SUCCESS,
-                    response,
-                    action
+                    response
                 })),
                 catchError(error =>
                     ({
