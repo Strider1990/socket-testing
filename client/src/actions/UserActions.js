@@ -12,7 +12,9 @@ export const LOGOUT_FAILED = 'LOGOUT_FAILED';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
 export const INITIAL_USER = {
-    user: {}
+    user: {
+        isLoggedIn: false
+    }
 }
 
 export const loginUser = (user) => {
@@ -68,7 +70,10 @@ export const loginUserEpic = action$ =>
             }).pipe(
                 map(response => ({
                     type: LOGIN_SUCCESS,
-                    response
+                    response,
+                    user: {
+                        isLoggedIn: true
+                    }
                 })),
                 catchError(error =>
                     of({
@@ -93,7 +98,10 @@ export const logoutUserEpic = action$ =>
             ajax('/api/logout').pipe(
                 map(response => ({
                     type: LOGOUT_SUCCESS,
-                    response
+                    response,
+                    user: {
+                        isLoggedIn: false
+                    }
                 })),
                 catchError(error =>
                     ({
